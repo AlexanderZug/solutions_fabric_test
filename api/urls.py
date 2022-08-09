@@ -1,9 +1,7 @@
-
-
 from django.urls import include, path
 from rest_framework.routers import SimpleRouter
 
-from api.views import SendingViewSet, ClientViewSet, MassageViewSet
+from api.views import ClientViewSet, MassageViewSet, SendingViewSet
 
 router = SimpleRouter()
 
@@ -13,5 +11,5 @@ router.register('massage', MassageViewSet, basename='massage')
 
 
 urlpatterns = [
-    path('s/', include(router.urls)),
+    path('', include(router.urls)),
 ]

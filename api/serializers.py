@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from server_sending.models import Sending, Client, Massage
+from server_sending.models import Client, Massage, Sending
 
 
 class SendingSerializer(serializers.ModelSerializer):
@@ -16,6 +16,8 @@ class ClientSerializer(serializers.ModelSerializer):
 
 
 class MassageSerializer(serializers.ModelSerializer):
+    client = serializers.StringRelatedField(read_only=True)
+
     class Meta:
         model = Massage
         fields = '__all__'

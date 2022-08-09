@@ -2,6 +2,7 @@ from django.core.validators import RegexValidator
 from django.db import models
 import pytz
 
+
 class StatusChoices(models.TextChoices):
     SEND = 'S', 'Send'
     NO_SEND = 'N', 'No send'
@@ -10,11 +11,15 @@ class StatusChoices(models.TextChoices):
 class Sending(models.Model):
     start = models.DateTimeField()
     stop = models.DateTimeField()
-    massage = models.TextField()
+    massage = models.ForeignKey('Massage', on_delete=models.CASCADE, related_name='massages', blank=True,
+                            null=True)
     tag = models.ForeignKey('Client', on_delete=models.CASCADE, related_name='tags', blank=True,
                             null=True)
     code = models.ForeignKey('Client', on_delete=models.CASCADE, related_name='codes',
                              blank=True, null=True)
+
+    def __str__(self):
+        return str(self.id)
 
 
 class Client(models.Model):
@@ -22,7 +27,8 @@ class Client(models.Model):
     tel_number = models.CharField(validators=[regex], unique=True, max_length=11, default='7')
     mobile_code = models.CharField(max_length=4)
     tag = models.CharField(max_length=20)
-    time_zone = models.CharField(max_length=50, choices=[(timezone, timezone) for timezone in pytz.common_timezones], default='UTC')
+    time_zone = models.CharField(max_length=50, choices=[(timezone, timezone) for timezone in pytz.common_timezones],
+                                 default='UTC')
 
     def __str__(self):
         return f'{self.tag}, {self.mobile_code}'
@@ -34,3 +40,7 @@ class Massage(models.Model):
     client = models.ForeignKey('Client', on_delete=models.CASCADE, related_name='clients')
     status = models.CharField(max_length=1, choices=StatusChoices.choices,
                               default=StatusChoices.NO_SEND)
+    massage_txt = models.TextField()
+
+    def __str__(self):
+        return str(self.id)
